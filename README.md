@@ -12,28 +12,11 @@ Senior Flutter Developer by day, Rust enthusiast by night.
 
 ### Skills
 
-
-<div align="center">
-	<table>
-		<tr>
-			<td><code><img height="32" src="https://user-images.githubusercontent.com/25181517/192599922-3a8ceb1c-ff1d-40bc-b73c-99ea1182d8ad.png" alt="Rust" title="Rust"/></code></td>
-		</tr>
-	</table>
-</div>
+[![My Skills](https://skillicons.dev/icons?i=actix,aws,dart,docker,dynamodb,firebase,flutter,git,githubactions,linux,neovim,regex)](https://skillicons.dev)
 
 ### Socials
 
-<p align="left">
-    <a href="https://www.github.com/Axot017" target="_blank" rel="noreferrer">
-        <img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/github.svg" width="32" height="32" />
-    </a> 
-    <a href="https://www.linkedin.com/in/axot" target="_blank" rel="noreferrer">
-        <img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/linkedin.svg" width="32" height="32" />
-    </a> 
-    <a href="https://www.stackoverflow.com/users/11035350/axot" target="_blank" rel="noreferrer">
-        <img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/stackoverflow.svg" width="32" height="32" />
-    </a>
-</p>
+<p align="left"> <a href="https://www.github.com/Axot017" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/github.svg" width="32" height="32" /></a> <a href="https://www.linkedin.com/in/axot" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/linkedin.svg" width="32" height="32" /></a> <a href="https://www.stackoverflow.com/users/11035350/axot" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/stackoverflow.svg" width="32" height="32" /></a></p>
 
 ### Badges
 
