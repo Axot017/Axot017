@@ -8,7 +8,7 @@ Senior Flutter Developer by day, Rust enthusiast by night.
 
 * 🌍  I'm based in Katowice
 * ✉️  You can contact me at [mateuszledwon@duck.com ](mailto:mateuszledwon@duck.com)
-* 🧠  I'm learning AWS
+* 🧠  I'm learning K8s
 
 ### Skills
 
