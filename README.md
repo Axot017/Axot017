@@ -26,6 +26,4 @@ Senior Flutter Developer by day, Golang and Rust enthusiast by night.
 
 <a href="http://www.github.com/Axot017"><img src="https://github-readme-streak-stats.herokuapp.com/?user=Axot017&theme=tokyonight" /></a>
 
-<a href="https://github.com/Axot017" align="left"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Axot017&theme=tokyonight" alt="Top Languages" /></a>
-
 <a href="https://github.com/Axot017" align="left"><img src="https://github-profile-trophy.vercel.app/?username=Axot017&theme=tokyonight" alt="Trophy Stats" /></a>
