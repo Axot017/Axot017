@@ -1,14 +1,14 @@
 Hi 👋 My name is Mateusz Ledwoń
 ===============================
 
-Senior Flutter Developer
+Software Engineer
 ------------------------
 
 Senior Flutter Developer by day, Golang and Rust enthusiast by night.
 
 * 🌍  I'm based in Katowice
 * ✉️  You can contact me at [mateuszledwon@duck.com ](mailto:mateuszledwon@duck.com)
-* 🧠  I'm learning K8s
+* 🧠  I'm learning K8s, GCP, Java, Ocaml
 
 ### Skills
 
