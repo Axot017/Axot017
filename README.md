@@ -6,7 +6,7 @@ Software Engineer
 
 * 🌍  I'm based in Katowice
 * ✉️  You can contact me at [mateuszledwon@duck.com ](mailto:mateuszledwon@duck.com)
-* 🧠  I'm learning K8s, GCP, Java, Ocaml
+* 🧠  I'm learning Gleam, TensorFlow
 
 ### Skills
 
