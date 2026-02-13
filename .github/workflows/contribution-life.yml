@@ -1,4 +1,4 @@
-name: contribution-ant
+name: contribution-invaders
 
 on:
   schedule:
@@ -9,9 +9,9 @@ on:
         description: "GitHub username to render"
         required: false
       iterations:
-        description: "Simulation steps"
+        description: "Maximum frames"
         required: false
-        default: "900"
+        default: "12000"
 
 permissions:
   contents: write
@@ -30,15 +30,15 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pillow
 
-      - name: Generate contribution ant GIF
+      - name: Generate contribution invaders GIF
         env:
           GITHUB_USER_NAME: ${{ github.event.inputs.github_user_name || github.repository_owner }}
-          ITERATIONS: ${{ github.event.inputs.iterations || '900' }}
+          ITERATIONS: ${{ github.event.inputs.iterations || '12000' }}
         run: >-
           python scripts/generate_contribution_life_gif.py
           --user "$GITHUB_USER_NAME"
           --iterations "$ITERATIONS"
-          --frame-duration-ms 35
+          --frame-duration-ms 30
           --output dist/github-contribution-life.gif
 
       - name: Publish to output branch

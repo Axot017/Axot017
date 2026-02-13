@@ -17,8 +17,8 @@ Software Engineer
 [![My Skills](https://skillicons.dev/icons?i=github)](https://www.github.com/Axot017)
 [![My Skills](https://skillicons.dev/icons?i=stackoverflow)](https://www.stackoverflow.com/users/11035350/axot)
 
-### Contribution Ant
+### Contribution Invaders
 
-Daily-generated animation of Langton's Ant walking on my GitHub contribution grid.
+Daily-generated self-playing Space Invaders where my GitHub contribution cells are enemies.
 
-![Langton's Ant from my GitHub contributions](https://raw.githubusercontent.com/Axot017/Axot017/output/github-contribution-life.gif)
+![Self-playing space invaders from my GitHub contributions](https://raw.githubusercontent.com/Axot017/Axot017/output/github-contribution-life.gif)
