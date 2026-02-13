@@ -16,3 +16,9 @@ Software Engineer
 [![My Skills](https://skillicons.dev/icons?i=linkedin)](https://www.linkedin.com/in/axot)
 [![My Skills](https://skillicons.dev/icons?i=github)](https://www.github.com/Axot017)
 [![My Skills](https://skillicons.dev/icons?i=stackoverflow)](https://www.stackoverflow.com/users/11035350/axot)
+
+### Contribution Ant
+
+Daily-generated animation of Langton's Ant walking on my GitHub contribution grid.
+
+![Langton's Ant from my GitHub contributions](https://raw.githubusercontent.com/Axot017/Axot017/output/github-contribution-life.gif)

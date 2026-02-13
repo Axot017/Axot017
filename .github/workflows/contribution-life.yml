@@ -1,0 +1,50 @@
+name: contribution-ant
+
+on:
+  schedule:
+    - cron: "15 1 * * *"
+  workflow_dispatch:
+    inputs:
+      github_user_name:
+        description: "GitHub username to render"
+        required: false
+      iterations:
+        description: "Simulation steps"
+        required: false
+        default: "900"
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pillow
+
+      - name: Generate contribution ant GIF
+        env:
+          GITHUB_USER_NAME: ${{ github.event.inputs.github_user_name || github.repository_owner }}
+          ITERATIONS: ${{ github.event.inputs.iterations || '900' }}
+        run: >-
+          python scripts/generate_contribution_life_gif.py
+          --user "$GITHUB_USER_NAME"
+          --iterations "$ITERATIONS"
+          --frame-duration-ms 35
+          --output dist/github-contribution-life.gif
+
+      - name: Publish to output branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
