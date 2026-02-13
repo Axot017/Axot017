@@ -1,4 +1,4 @@
-name: contribution-invaders
+name: contribution-gif
 
 on:
   schedule:
@@ -9,9 +9,9 @@ on:
         description: "GitHub username to render"
         required: false
       iterations:
-        description: "Maximum frames"
+        description: "Maximum simulation ticks"
         required: false
-        default: "12000"
+        default: "6000"
 
 permissions:
   contents: write
@@ -30,16 +30,16 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip pillow
 
-      - name: Generate contribution invaders GIF
+      - name: Generate contribution GIF
         env:
           GITHUB_USER_NAME: ${{ github.event.inputs.github_user_name || github.repository_owner }}
-          ITERATIONS: ${{ github.event.inputs.iterations || '12000' }}
+          ITERATIONS: ${{ github.event.inputs.iterations || '6000' }}
         run: >-
-          python scripts/generate_contribution_life_gif.py
+          python scripts/generate_contribution_gif.py
           --user "$GITHUB_USER_NAME"
           --iterations "$ITERATIONS"
           --frame-duration-ms 30
-          --output dist/github-contribution-life.gif
+          --output dist/github-contribution.gif
 
       - name: Publish to output branch
         uses: crazy-max/ghaction-github-pages@v4

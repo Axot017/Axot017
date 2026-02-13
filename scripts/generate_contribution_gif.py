@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import random
 import re
 import urllib.error
 import urllib.request
@@ -109,7 +110,7 @@ def pick_target_column(
     enemies: dict[tuple[int, int], int],
     formation_x: int,
     formation_y: int,
-    ship_x: float,
+    ship_x: int,
 ) -> int:
     candidates = [
         (formation_x + ex, formation_y + ey, hp)
@@ -120,11 +121,11 @@ def pick_target_column(
     return target_x
 
 
-def move_ship_towards(ship_x: float, target_x: int, width: int, speed: float) -> float:
+def move_ship_towards(ship_x: int, target_x: int, width: int) -> int:
     if target_x > ship_x:
-        return min(width - 1, ship_x + speed)
+        return min(width - 1, ship_x + 1)
     if target_x < ship_x:
-        return max(0, ship_x - speed)
+        return max(0, ship_x - 1)
     return ship_x
 
 
@@ -133,22 +134,28 @@ def move_bullets_and_apply_hits(
     enemies: dict[tuple[int, int], int],
     formation_x: int,
     formation_y: int,
+    bullet_speed: int,
 ) -> list[Bullet]:
     next_bullets: list[Bullet] = []
 
     for bullet in bullets:
-        bullet.y -= 1
-        if bullet.y < 0:
-            continue
+        destroyed = False
+        for _ in range(bullet_speed):
+            bullet.y -= 1
+            if bullet.y < 0:
+                destroyed = True
+                break
 
-        rel = (bullet.x - formation_x, bullet.y - formation_y)
-        if rel in enemies and enemies[rel] > 0:
-            enemies[rel] -= 1
-            if enemies[rel] <= 0:
-                del enemies[rel]
-            continue
+            rel = (bullet.x - formation_x, bullet.y - formation_y)
+            if rel in enemies and enemies[rel] > 0:
+                enemies[rel] -= 1
+                if enemies[rel] <= 0:
+                    del enemies[rel]
+                destroyed = True
+                break
 
-        next_bullets.append(bullet)
+        if not destroyed:
+            next_bullets.append(bullet)
 
     return next_bullets
 
@@ -174,9 +181,9 @@ def step_enemy_formation(
 
 
 def compute_enemy_move_interval(total_hp: int, width: int, max_descents: int) -> int:
-    estimated_ticks_to_clear = int(total_hp * 3 + width * 10)
+    estimated_ticks_to_clear = int(total_hp * 1.3 + width * 6)
     raw = ceil(estimated_ticks_to_clear / max(1, width * max_descents))
-    return max(20, min(140, raw))
+    return max(28, min(180, raw))
 
 
 def render_frame(
@@ -186,7 +193,7 @@ def render_frame(
     formation_x: int,
     formation_y: int,
     bullets: list[Bullet],
-    ship_x: float,
+    ship_x: int,
     ship_y: int,
     *,
     cell_size: int,
@@ -234,7 +241,7 @@ def render_frame(
             (cx, cy, cx + bw - 1, cy + bh - 1), radius=2, fill=BULLET_COLOR
         )
 
-    ship_px = margin + int(round(ship_x * (cell_size + gap)))
+    ship_px = margin + ship_x * (cell_size + gap)
     ship_py = margin + ship_y * (cell_size + gap)
     inset = max(1, cell_size // 8)
     draw.polygon(
@@ -256,31 +263,34 @@ def generate_gif(
     username: str,
     output_path: Path,
     *,
-    max_frames: int,
+    max_ticks: int,
     frame_duration_ms: int,
     cell_size: int,
     gap: int,
     margin: int,
+    render_every: int,
+    final_hold_frames: int,
 ) -> None:
     contribution_grid = fetch_contribution_grid(username)
     enemies = build_enemies(contribution_grid)
     if not enemies:
         raise RuntimeError("No enemies found. No contributions available to render.")
 
-    width = len(contribution_grid[0])
+    contribution_width = len(contribution_grid[0])
+    width = contribution_width + 2
     enemy_height = len(contribution_grid)
     height = enemy_height + 30
-    ship_x = width / 2
+    ship_x = width // 2
     ship_y = height - 2
 
-    formation_x = 0
+    formation_x = 1
     formation_y = 2
     enemy_direction = 1
 
     bullets: list[Bullet] = []
     cooldown = 0
-    ship_speed = 0.9
     fire_cooldown_ticks = 0
+    bullet_speed = 2
 
     total_hp = sum(enemies.values())
     max_descents_before_fail = max(3, ship_y - (formation_y + enemy_height) - 2)
@@ -289,6 +299,7 @@ def generate_gif(
     )
 
     tick = 0
+    current_target_x = ship_x
     frames: list[Any] = []
     frames.append(
         render_frame(
@@ -306,27 +317,48 @@ def generate_gif(
         )
     )
 
-    while enemies and tick < max_frames:
+    while enemies and tick < max_ticks:
         tick += 1
 
-        target_x = pick_target_column(enemies, formation_x, formation_y, ship_x)
-        ship_x = move_ship_towards(ship_x, target_x, width, ship_speed)
+        enemy_count = len(enemies)
+        chaos_mode = enemy_count > 220
+
+        if chaos_mode:
+            if tick % 8 == 0 or ship_x == current_target_x:
+                enemy_columns = sorted(
+                    {formation_x + ex for (ex, _), hp in enemies.items() if hp > 0}
+                )
+                if enemy_columns:
+                    if random.random() < 0.45:
+                        nearest_columns = sorted(
+                            enemy_columns, key=lambda col: abs(col - ship_x)
+                        )[:12]
+                        current_target_x = random.choice(nearest_columns)
+                    else:
+                        current_target_x = pick_target_column(
+                            enemies, formation_x, formation_y, ship_x
+                        )
+        else:
+            current_target_x = pick_target_column(
+                enemies, formation_x, formation_y, ship_x
+            )
+
+        ship_x = move_ship_towards(ship_x, current_target_x, width)
 
         if cooldown <= 0:
-            ship_col = int(round(ship_x))
             has_enemy_ahead = any(
-                formation_x + ex == ship_col and formation_y + ey < ship_y
+                formation_x + ex == ship_x and formation_y + ey < ship_y
                 for (ex, ey), hp in enemies.items()
                 if hp > 0
             )
             if has_enemy_ahead:
-                bullets.append(Bullet(x=ship_col, y=ship_y - 1))
+                bullets.append(Bullet(x=ship_x, y=ship_y - 1))
                 cooldown = fire_cooldown_ticks
         else:
             cooldown -= 1
 
         bullets = move_bullets_and_apply_hits(
-            bullets, enemies, formation_x, formation_y
+            bullets, enemies, formation_x, formation_y, bullet_speed
         )
 
         if tick % enemy_move_interval == 0 and enemies:
@@ -338,24 +370,25 @@ def generate_gif(
                 enemy_direction,
             )
 
-        frames.append(
-            render_frame(
-                width,
-                height,
-                enemies,
-                formation_x,
-                formation_y,
-                bullets,
-                ship_x,
-                ship_y,
-                cell_size=cell_size,
-                gap=gap,
-                margin=margin,
+        if tick % render_every == 0 or not enemies:
+            frames.append(
+                render_frame(
+                    width,
+                    height,
+                    enemies,
+                    formation_x,
+                    formation_y,
+                    bullets,
+                    ship_x,
+                    ship_y,
+                    cell_size=cell_size,
+                    gap=gap,
+                    margin=margin,
+                )
             )
-        )
 
     if frames:
-        for _ in range(10):
+        for _ in range(final_hold_frames):
             frames.append(frames[-1].copy())
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -364,7 +397,7 @@ def generate_gif(
         output_path,
         save_all=True,
         append_images=rest,
-        optimize=True,
+        optimize=False,
         duration=frame_duration_ms,
         loop=0,
         disposal=2,
@@ -382,12 +415,14 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--user", required=True, help="GitHub username")
     parser.add_argument(
-        "--output", default="dist/github-contribution-life.gif", help="Output GIF path"
+        "--output", default="dist/github-contribution.gif", help="Output GIF path"
     )
     parser.add_argument(
-        "--iterations", type=int, default=12000, help="Maximum frames to render"
+        "--iterations", type=int, default=6000, help="Maximum simulation ticks"
     )
     parser.add_argument("--frame-duration-ms", type=int, default=30)
+    parser.add_argument("--render-every", type=int, default=1)
+    parser.add_argument("--final-hold-frames", type=int, default=6)
     parser.add_argument("--cell-size", type=int, default=8)
     parser.add_argument("--gap", type=int, default=2)
     parser.add_argument("--margin", type=int, default=12)
@@ -398,15 +433,21 @@ def main() -> None:
     args = parse_args()
     if args.iterations < 1:
         raise SystemExit("--iterations must be >= 1")
+    if args.render_every < 1:
+        raise SystemExit("--render-every must be >= 1")
+    if args.final_hold_frames < 0:
+        raise SystemExit("--final-hold-frames must be >= 0")
 
     generate_gif(
         args.user,
         Path(args.output),
-        max_frames=args.iterations,
+        max_ticks=args.iterations,
         frame_duration_ms=args.frame_duration_ms,
         cell_size=args.cell_size,
         gap=args.gap,
         margin=args.margin,
+        render_every=args.render_every,
+        final_hold_frames=args.final_hold_frames,
     )
 
 
