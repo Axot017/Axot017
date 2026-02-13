@@ -9,8 +9,6 @@ Software Engineer
 
 ### Contribution Invaders
 
-Daily-generated self-playing Space Invaders where my GitHub contribution cells are enemies.
-
 ![Self-playing space invaders from my GitHub contributions](https://raw.githubusercontent.com/Axot017/Axot017/output/github-contribution.gif)
 
 ### Skills
