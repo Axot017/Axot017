@@ -13,7 +13,7 @@ Software Engineer
 
 ### Skills
 
-[![My Skills](https://skillicons.dev/icons?i=go,java,spring,mongodb,terraform,flutter,aws,rust,dynamodb,postgres,ocaml,nix,dart,docker,firebase,git,githubactions,linux,lua,neovim,postman,vscode)](https://github.com/Axot017?tab=repositories)
+[![My Skills](https://skillicons.dev/icons?i=go,java,spring,mongodb,terraform,flutter,aws,rust,dynamodb,postgres,ocaml,nix,dart,docker,firebase,git,githubactions,linux,lua,neovim,postman)](https://github.com/Axot017?tab=repositories)
 
 ### Socials
 
